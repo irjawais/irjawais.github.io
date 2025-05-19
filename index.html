@@ -1,0 +1,2160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muhammad Awais - CV</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #1a252f;
+            --night-color: #0f1624;
+            --day-color: #e0f7fa;
+            --transition-speed: 0.5s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', 'Segoe UI', sans-serif;
+        }
+
+        body {
+            overflow-x: hidden;
+            color: var(--dark-color);
+            background-color: var(--light-color);
+            transition: background-color 0.8s ease;
+        }
+
+        /* Full page canvas background */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Canvas for rain effects */
+        #rain-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Header Styles */
+        header {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 50px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .intro-animation {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        
+        .intro-particle {
+            position: absolute;
+            background: var(--secondary-color);
+            border-radius: 50%;
+            opacity: 0;
+            filter: blur(2px);
+            animation: particleAnimation 10s infinite linear;
+        }
+        
+        @keyframes particleAnimation {
+            0% {
+                transform: translateY(0) translateX(0) scale(1);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.4;
+            }
+            100% {
+                transform: translateY(-800px) translateX(100px) scale(0);
+                opacity: 0;
+            }
+        }
+        
+        .glow-effect {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(52, 152, 219, 0.4) 0%, rgba(52, 152, 219, 0) 70%);
+            filter: blur(20px);
+            animation: pulseGlow 8s infinite ease-in-out;
+            z-index: 0;
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.5);
+                opacity: 0.8;
+            }
+        }
+
+        .profile-container {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            transform-style: preserve-3d;
+            transform: perspective(1000px);
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-width: 90%;
+            width: 650px;
+            position: relative;
+            z-index: 2;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            opacity: 0;
+            transform: perspective(1000px) rotateX(10deg) translateY(50px);
+            animation: profileIn 1s forwards 0.5s;
+        }
+        
+        @keyframes profileIn {
+            to {
+                opacity: 1;
+                transform: perspective(1000px) rotateX(0) translateY(0);
+            }
+        }
+        
+        .profile-container:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                60deg,
+                transparent 40%,
+                rgba(255, 255, 255, 0.6) 50%,
+                transparent 60%
+            );
+            transform: rotate(45deg);
+            animation: shimmer 10s infinite linear;
+        }
+        
+        @keyframes shimmer {
+            0% {
+                top: -150%;
+                left: -50%;
+            }
+            100% {
+                top: 100%;
+                left: 100%;
+            }
+        }
+
+        .profile-container:hover {
+            transform: perspective(1000px) rotateX(5deg) rotateY(5deg) scale(1.03);
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.3);
+        }
+
+        .profile-image-container {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 30px;
+        }
+        
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--secondary-color);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .profile-image-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 170px;
+            height: 170px;
+            border: 2px dashed var(--secondary-color);
+            border-radius: 50%;
+            animation: spinRing 15s linear infinite;
+        }
+        
+        @keyframes spinRing {
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+        
+        .profile-image-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 160px;
+            height: 160px;
+            background: radial-gradient(circle, rgba(52, 152, 219, 0.4) 0%, rgba(52, 152, 219, 0) 70%);
+            border-radius: 50%;
+            filter: blur(10px);
+            z-index: 1;
+            animation: pulseImageGlow 4s infinite ease-in-out;
+        }
+        
+        @keyframes pulseImageGlow {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 0.6;
+            }
+        }
+
+        .profile-image:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 15px 40px rgba(52, 152, 219, 0.6);
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            display: inline-block;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s forwards 0.8s;
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            width: 70%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+            bottom: -10px;
+            left: 15%;
+            transform: scaleX(0);
+            transform-origin: center;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .profile-container:hover h1::after {
+            transform: scaleX(1);
+        }
+
+        .contact-info {
+            margin: 20px 0;
+        }
+
+        .contact-info p {
+            margin: 5px 0;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--secondary-color);
+            transform: translateY(-3px);
+        }
+
+        /* Navigation Menu */
+        nav {
+            position: sticky;
+            top: 0;
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 15px 0;
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: var(--light-color);
+            font-weight: bold;
+            font-size: 1.5rem;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: var(--light-color);
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover, 
+        .nav-links a.active {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            color: var(--light-color);
+            font-size: 1.5rem;
+        }
+
+        /* Section Styles */
+        section {
+            min-height: 100vh;
+            padding: 80px 0;
+            position: relative;
+            transition: background-color 0.8s ease;
+        }
+
+        section.day {
+            background-color: var(--day-color);
+            color: var(--dark-color);
+        }
+
+        section.night {
+            background-color: var(--night-color);
+            color: var(--light-color);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 4px;
+            background: var(--accent-color);
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Experience Section */
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: var(--secondary-color);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+            border-radius: 3px;
+        }
+
+        .timeline-item {
+            position: relative;
+            width: 50%;
+            padding: 20px 40px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(50px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .timeline-item.night {
+            background: rgba(26, 37, 47, 0.9);
+            color: var(--light-color);
+        }
+
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 50%;
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background-color: white;
+            border: 4px solid var(--secondary-color);
+            border-radius: 50%;
+            top: 20px;
+            z-index: 1;
+        }
+
+        .timeline-item:nth-child(odd)::after {
+            right: -17px;
+        }
+
+        .timeline-item:nth-child(even)::after {
+            left: -17px;
+        }
+
+        .timeline-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .timeline-date {
+            color: var(--accent-color);
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .timeline-title {
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            color: var(--primary-color);
+        }
+
+        .timeline-item.night .timeline-title {
+            color: var(--secondary-color);
+        }
+
+        .timeline-content ul {
+            padding-left: 20px;
+        }
+
+        .timeline-content li {
+            margin-bottom: 5px;
+        }
+
+        /* Skills Section */
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .skill-category {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 25px;
+            width: 100%;
+            max-width: 350px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .night .skill-category {
+            background: rgba(26, 37, 47, 0.9);
+        }
+
+        .skill-category:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .skill-category h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.3rem;
+        }
+
+        .night .skill-category h3 {
+            color: var(--secondary-color);
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .skill-tag {
+            background: var(--secondary-color);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-block;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .skill-tag:hover {
+            background: var(--primary-color);
+            transform: scale(1.05);
+        }
+
+        /* Publications Section */
+        .publications-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .publication-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .night .publication-card {
+            background: rgba(26, 37, 47, 0.9);
+        }
+
+        .publication-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .publication-card::before {
+            content: '';
+            position: absolute;
+            width: 5px;
+            height: 100%;
+            background: var(--accent-color);
+            left: 0;
+            top: 0;
+        }
+
+        .publication-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .night .publication-title {
+            color: var(--secondary-color);
+        }
+
+        .publication-authors {
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        .publication-journal {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .publication-link {
+            color: var(--secondary-color);
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .publication-link:hover {
+            color: var(--accent-color);
+            text-decoration: underline;
+        }
+
+        /* Projects Section */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .night .project-card {
+            background: rgba(26, 37, 47, 0.9);
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .project-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 15px;
+        }
+
+        .night .project-header {
+            background: var(--secondary-color);
+        }
+
+        .project-title {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .project-date {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .project-content {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        .project-content ul {
+            padding-left: 20px;
+        }
+
+        .project-content li {
+            margin-bottom: 8px;
+        }
+
+        .project-link {
+            background: var(--secondary-color);
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .project-link:hover {
+            background: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        /* Recommendations Section */
+        .recommendations-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .recommendation-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .night .recommendation-card {
+            background: rgba(26, 37, 47, 0.9);
+        }
+
+        .recommendation-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .recommender-name {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .night .recommender-name {
+            color: var(--secondary-color);
+        }
+
+        .recommender-title {
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+
+        .recommendation-content {
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .recommender-email {
+            margin-top: 15px;
+            color: var(--secondary-color);
+        }
+
+        /* Floating bubbles */
+        .bubble {
+            position: absolute;
+            background: rgba(52, 152, 219, 0.2);
+            border-radius: 50%;
+            animation: float 8s infinite ease-in-out;
+            z-index: -1;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(10deg);
+            }
+        }
+
+        /* Floating particles */
+        .particle {
+            position: absolute;
+            background: var(--secondary-color);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: particle-float 15s infinite linear;
+            z-index: -1;
+        }
+
+        @keyframes particle-float {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+            }
+            25% {
+                transform: translateY(-30px) translateX(30px) rotate(90deg);
+            }
+            50% {
+                transform: translateY(0) translateX(60px) rotate(180deg);
+            }
+            75% {
+                transform: translateY(30px) translateX(30px) rotate(270deg);
+            }
+            100% {
+                transform: translateY(0) translateX(0) rotate(360deg);
+            }
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            overflow: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: white;
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 10px;
+            padding: 30px;
+            position: relative;
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: var(--accent-color);
+        }
+
+        /* Footer styles */
+        footer {
+            background: var(--primary-color);
+            color: var(--light-color);
+            padding: 30px 0;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-links a {
+            color: var(--light-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary-color);
+        }
+
+        .copyright {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Interactive cursor */
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            pointer-events: none;
+            opacity: 0.7;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, background-color 0.3s;
+        }
+
+        .custom-cursor.active {
+            width: 40px;
+            height: 40px;
+            background-color: var(--accent-color);
+            opacity: 0.3;
+        }
+
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--secondary-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: var(--primary-color);
+            transform: translateY(-5px);
+        }
+
+        /* Preloader */
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            overflow: hidden;
+        }
+        
+        .preloader.fade {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .preloader-text {
+            position: absolute;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: white;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInText 1.2s ease forwards 0.5s;
+        }
+        
+        @keyframes fadeInText {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .preloader-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+            gap: 10px;
+            width: 300px;
+            height: 300px;
+        }
+        
+        .grid-item {
+            background-color: var(--secondary-color);
+            border-radius: 4px;
+            opacity: 0;
+            transform: scale(0);
+        }
+        
+        @keyframes gridAnimation {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            60% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+        }
+        
+        @keyframes gridFadeOut {
+            to {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive styles */
+        @media screen and (max-width: 1024px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                background: var(--primary-color);
+                top: 60px;
+                left: 0;
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+                padding: 20px 0;
+                gap: 10px;
+                transform: translateY(-100%);
+                transition: transform 0.3s ease;
+                z-index: 100;
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+            }
+
+            .timeline::after {
+                left: 31px;
+            }
+
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+
+            .timeline-item:nth-child(even) {
+                left: 0;
+            }
+
+            .timeline-item::after {
+                left: 15px;
+            }
+
+            .timeline-item:nth-child(odd)::after {
+                right: auto;
+                left: 15px;
+            }
+
+            .projects-grid,
+            .recommendations-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.7rem;
+            }
+
+            .profile-container {
+                padding: 20px;
+            }
+
+            .profile-image {
+                width: 120px;
+                height: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="preloader-grid"></div>
+        <div class="preloader-text">Welcome to my CV</div>
+    </div>
+
+    <!-- Custom cursor -->
+    <div class="custom-cursor"></div>
+
+    <!-- Canvas backgrounds -->
+    <canvas id="bg-canvas"></canvas>
+    <canvas id="rain-canvas"></canvas>
+
+    <!-- Back to top button -->
+    <a href="#top" class="back-to-top">↑</a>
+
+    <!-- Header Section -->
+    <header id="top">
+        <div class="profile-container">
+            <div class="profile-image-container">
+        <div class="profile-image-glow"></div>
+        <div class="profile-image-ring"></div>
+        <img src="./WhatsApp_Image_2025-04-13_at_17.51.38.jpeg" alt="Muhammad Awais" class="profile-image">
+    </div>
+            <h1>Muhammad Awais</h1>
+            <h3>Machine Learning Engineer & AI Researcher</h3>
+            
+            <div class="contact-info">
+                <p> National: Pakistani, Living: Portugal</p>
+                <p>Phone: (+351) 920784384 | Email: muhammadawais95@gmail.com</p>
+                <p>Location: Lisbon, Portugal</p>
+            </div>
+            
+            <div class="social-links">
+                <a href="https://www.linkedin.com/in/awais-saleem-48a911188/" target="_blank">LinkedIn</a> |
+                <a href="https://scholar.google.com/citations?user=73P5_tcAAAAJ" target="_blank">Google Scholar</a> |
+                <a href="https://orcid.org/0000-0003-1839-1356" target="_blank">ORCID</a> |
+                <a href="https://github.com/irjawais" target="_blank">GitHub</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="container nav-container">
+            <a href="#top" class="logo">MA</a>
+            <div class="menu-toggle">☰</div>
+            <ul class="nav-links">
+                <li><a href="#experience" class="nav-link">Experience</a></li>
+                <li><a href="#education" class="nav-link">Education</a></li>
+                <li><a href="#skills" class="nav-link">Skills</a></li>
+                <li><a href="#publications" class="nav-link">Publications</a></li>
+                <li><a href="#projects" class="nav-link">Projects</a></li>
+                <li><a href="#recommendations" class="nav-link">Recommendations</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Experience Section -->
+    <section id="experience" class="day">
+        <div class="container">
+            <h2 class="section-title">Work Experience</h2>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">05/2024 - 01/2025</div>
+                    <h3 class="timeline-title">Machine Learning Engineer - FLAPMAX (REMOTE)</h3>
+                    <div class="timeline-content">
+                        <ul>
+                            <li>Data prep, EDA, feature engineering for ML tasks</li>
+                            <li>Developing, training, evaluating ML models, LLMs, chatbots</li>
+                            <li>Building end-to-end ML pipelines for training, deployment, serving</li>
+                            <li>Containerizing, deploying models to AWS, GCP, Azure ML</li>
+                            <li>LLM fine-tuning on custom datasets</li>
+                            <li>Advanced prompt engineering techniques</li>
+                            <li>RAG architecture implementation</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-date">09/2016 - CURRENT</div>
+                    <h3 class="timeline-title">Software & Machine Learning Engineer - CODELFI (REMOTE)</h3>
+                    <div class="timeline-content">
+                        <ul>
+                            <li>Integrated RESTful and GraphQL APIs</li>
+                            <li>Built interactive dashboards using Tableau, Power BI, and Plotly</li>
+                            <li>Managed relational and NoSQL databases</li>
+                            <li>Designed and implemented deep learning models for fraud detection</li>
+                            <li>Deployed and monitored real-time fraud detection systems</li>
+                            <li>Worked with Generative AI models (GPT, BERT, LLMs)</li>
+                            <li>Built and optimized ETL pipelines for large-scale data</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-date">03/2020 - 06/2022</div>
+                    <h3 class="timeline-title">Biomedical Signal Processing with Deep Learning - AIR University</h3>
+                    <div class="timeline-content">
+                        <ul>
+                            <li>Processed EEG, audio with deep learning</li>
+                            <li>Detected diseases via EEG, audio signals</li>
+                            <li>Experience in Time Series Data classification like EEG for epilepsy, sleep stages</li>
+                            <li>Experienced with SVM, CNN, LSTM, Regression, GNN</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education Section -->
+    <section id="education" class="night">
+        <div class="container">
+            <h2 class="section-title">Education and Training</h2>
+            
+            <div class="timeline">
+                <div class="timeline-item night">
+                    <div class="timeline-date">09/2024 - CURRENT</div>
+                    <h3 class="timeline-title">PhD in Information Science and Technology (Artificial Intelligence)</h3>
+                    <div class="timeline-content">
+                        <p>Iscte - University Institute of Lisbon</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item night">
+                    <div class="timeline-date">01/2020 - 06/2022</div>
+                    <h3 class="timeline-title">MS (Artificial Intelligence)</h3>
+                    <div class="timeline-content">
+                        <p>Air University Islamabad, Pakistan</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item night">
+                    <div class="timeline-date">09/2015 - 10/2019</div>
+                    <h3 class="timeline-title">BS Hons (Computer Science)</h3>
+                    <div class="timeline-content">
+                        <p>Institute of Southern Punjab</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item night">
+                    <div class="timeline-date">08/2023</div>
+                    <h3 class="timeline-title">Mathematics for Machine Learning and Data Science</h3>
+                    <div class="timeline-content">
+                        <p>DeepLearning.AI (Coursera)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="day">
+        <div class="container">
+            <h2 class="section-title">Skills & Expertise</h2>
+            
+            <div class="skills-container">
+                <div class="skill-category">
+                    <h3>Research Interest</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Machine Learning</span>
+                        <span class="skill-tag">Graph Neural Network</span>
+                        <span class="skill-tag">Deep Learning</span>
+                        <span class="skill-tag">Brain Computer Interface</span>
+                        <span class="skill-tag">Biomedical Signal Processing</span>
+                        <span class="skill-tag">Model Optimization</span>
+                        <span class="skill-tag">Data Science</span>
+                    </div>
+                </div>
+                
+                <div class="skill-category">
+                    <h3>Programming Skills</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">TensorFlow</span>
+                        <span class="skill-tag">NumPy</span>
+                        <span class="skill-tag">Keras</span>
+                        <span class="skill-tag">Matlab</span>
+                        <span class="skill-tag">SciKitLearn</span>
+                        <span class="skill-tag">PHP</span>
+                        <span class="skill-tag">SQL</span>
+                        <span class="skill-tag">Spark</span>
+                        <span class="skill-tag">TypeScript</span>
+                    </div>
+                </div>
+                
+                <div class="skill-category">
+                    <h3>Software Engineering Skills</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">C/C++</span>
+                        <span class="skill-tag">NodeJS</span>
+                        <span class="skill-tag">JavaScript</span>
+                        <span class="skill-tag">Java</span>
+                        <span class="skill-tag">jQuery</span>
+                        <span class="skill-tag">Laravel Framework</span>
+                    </div>
+                </div>
+                
+                <div class="skill-category">
+                    <h3>Advanced Skills</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Azure</span>
+                        <span class="skill-tag">Snowflake</span>
+                        <span class="skill-tag">Power BI</span>
+                        <span class="skill-tag">GIT</span>
+                        <span class="skill-tag">CI/CD/CT pipelines for ML</span>
+                        <span class="skill-tag">Kubernetes</span>
+                        <span class="skill-tag">AWS</span>
+                        <span class="skill-tag">Vertex AI</span>
+                        <span class="skill-tag">Data Bricks</span>
+                        <span class="skill-tag">Data Factory</span>
+                        <span class="skill-tag">Docker</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Publications Section -->
+    <section id="publications" class="night">
+        <div class="container">
+            <h2 class="section-title">Publications</h2>
+            
+            <div class="publications-container">
+                <div class="publication-card">
+                    <h3 class="publication-title">Graphical Insight: Revolutionizing Seizure Detection with EEG Representation</h3>
+                    <p class="publication-authors">Awais, M., Belhaouari, B.S, Kassoul K</p>
+                    <p class="publication-journal">Biomedicines (MDPI IF=4.7: Published) Journal</p>
+                    <a href="https://doi.org/10.3390/biomedicines12061283" class="publication-link" target="_blank">View Publication</a>
+                </div>
+                
+                <div class="publication-card">
+                    <h3 class="publication-title">Graph-Based Electroencephalography Analysis in Tinnitus Therapy</h3>
+                    <p class="publication-authors">Awais, M., Belhaouari, B.S, Kassoul K</p>
+                    <p class="publication-journal">Biomedicines (MDPI IF=4.7: Published) Journal</p>
+                    <a href="https://doi.org/10.3390/biomedicines12071404" class="publication-link" target="_blank">View Publication</a>
+                </div>
+                
+                <div class="publication-card">
+                    <h3 class="publication-title">Thoughts of Brain EEG Signal to Text Conversion using Weighted Feature Fusion-based Multiscale Dilated Adaptive Densenet with Attention Mechanism</h3>
+                    <p class="publication-authors">Yang, J Awais, M., ...</p>
+                    <p class="publication-journal">Biomedical Signal Processing and Control (Elsevier Journal IF=5.076)</p>
+                    <a href="https://doi.org/10.1016/j.bspc.2023.105120" class="publication-link" target="_blank">View Publication</a>
+                </div>
+                
+                <div class="publication-card">
+                    <h3 class="publication-title">Efficient reinforcement learning-based method for plagiarism detection boosted by a population-based algorithm for pretraining weights</h3>
+                    <p class="publication-authors">Jiale Xiong, Jing Yang, Lei Yan, Muhammad Awais, Abdullah Ayub Khan, Roohallah Alizadehsani, U. Rajendra Acharya</p>
+                    <p class="publication-journal">Expert Systems with Applications (Elsevier IF=8.5)</p>
+                    <a href="https://doi.org/10.1016/j.eswa.2023.122088" class="publication-link" target="_blank">View Publication</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="day">
+        <div class="container">
+            <h2 class="section-title">Projects</h2>
+            
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3 class="project-title">Chemical Structure Prediction</h3>
+                        <p class="project-date">05/2023 - CURRENT</p>
+                    </div>
+                    <div class="project-content">
+                        <ul>
+                            <li>Worked on Graph generation for chemical compound structure prediction on public QM7b database</li>
+                            <li>Unsupervised approach with encoders (GAT,GCN) and decoders (MLP)</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3 class="project-title">Eye State Detection</h3>
+                        <p class="project-date">2022</p>
+                    </div>
+                    <div class="project-content">
+                        <ul>
+                            <li>Eye State (Open & Close) State detection with 14 channel EEG Dataset</li>
+                            <li>Cognitive work load analysis as how long person keep focusing</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3 class="project-title">EEG Signals to Graph Representation</h3>
+                        <p class="project-date">2021</p>
+                    </div>
+                    <div class="project-content">
+                        <ul>
+                            <li>Worked with Epilepsy EEG signal to convert into Graph Representation</li>
+                            <li>Applied GNN model</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3 class="project-title">Mathematical Features Extractor from EEG Signals</h3>
+                        <p class="project-date">2020</p>
+                    </div>
+                    <div class="project-content">
+                        <ul>
+                            <li>Read EEG signals in python</li>
+                            <li>Generated Statistical and Frequency Based Features for EEG signals</li>
+                        </ul>
+                        <a href="https://bitbucket.org/irjawais/sleep_cnn_rf/src/master/" class="project-link" target="_blank">View Project</a>
+                    </div>
+                </div>
+                
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3 class="project-title">IoT Base Parking System with AI</h3>
+                        <p class="project-date">2019</p>
+                    </div>
+                    <div class="project-content">
+                        <ul>
+                            <li>Image Processing Techniques were used to detect number plates</li>
+                            <li>Ultrasonic sensor used to detect parking space status</li>
+                            <li>Arduino use to connect REST-API build in Laravel PHP</li>
+                        </ul>
+                        <a href="https://bitbucket.org/irjawais/isp-online-parking-system-fyp/src/master/" class="project-link" target="_blank">View Project</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recommendations Section -->
+    <section id="recommendations" class="night">
+        <div class="container">
+            <h2 class="section-title">Recommendations</h2>
+            
+            <div class="recommendations-container">
+                <div class="recommendation-card">
+                    <h3 class="recommender-name">Dr. Shaharyar Kamal</h3>
+                    <p class="recommender-title">Thesis Supervisor</p>
+                    <div class="recommendation-content">
+                        <ul>
+                            <li>MS thesis supervisor</li>
+                            <li>Worked on Signal Processing Projects</li>
+                        </ul>
+                    </div>
+                    <p class="recommender-email">Email: skamal@ing.uchile.cl</p>
+                </div>
+                
+                <div class="recommendation-card">
+                    <h3 class="recommender-name">Dr. Hameed ur Rahman</h3>
+                    <p class="recommender-title">BS and MS Supervisor</p>
+                    <div class="recommendation-content">
+                        <ul>
+                            <li>Working on IoT based Parking system Project in BS</li>
+                            <li>Discussed and understand multiple project cases studies during my MS</li>
+                        </ul>
+                    </div>
+                    <p class="recommender-email">Email: rhameedur@mail.au.edu.pk</p>
+                </div>
+                
+                <div class="recommendation-card">
+                    <h3 class="recommender-name">Dr. Samir Brahim Belhaouari</h3>
+                    <p class="recommender-title">Research Project (GNN-EEG) Supervisor</p>
+                    <div class="recommendation-content">
+                        <p>Work with them on GNN for EEG signals</p>
+                    </div>
+                    <p class="recommender-email">Email: sbelhaouari@hbku.edu.qa</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="#top">Home</a>
+                    <a href="#experience">Experience</a>
+                    <a href="#education">Education</a>
+                    <a href="#skills">Skills</a>
+                    <a href="#publications">Publications</a>
+                    <a href="#projects">Projects</a>
+                </div>
+                <p>Contact: muhammadawais95@gmail.com | (+351) 920784384</p>
+                <p class="copyright">© 2025 Muhammad Awais - All Rights Reserved</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal for detailed view -->
+    <div class="modal" id="detailModal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <div class="modal-body"></div>
+        </div>
+    </div>
+
+    <script>
+        // Preloader
+        window.addEventListener('load', () => {
+            // Create grid items with staggered animation
+            const grid = document.querySelector('.preloader-grid');
+            
+            for (let i = 0; i < 25; i++) {
+                const item = document.createElement('div');
+                item.classList.add('grid-item');
+                
+                // Calculate delay based on position
+                const row = Math.floor(i / 5);
+                const col = i % 5;
+                const delay = (row + col) * 0.05;
+                
+                item.style.animationName = 'gridAnimation';
+                item.style.animationDuration = '0.5s';
+                item.style.animationDelay = `${delay}s`;
+                item.style.animationFillMode = 'forwards';
+                
+                grid.appendChild(item);
+            }
+            
+            // Animate grid items out
+            setTimeout(() => {
+                const items = document.querySelectorAll('.grid-item');
+                items.forEach((item, index) => {
+                    // Calculate delay for exit animation
+                    const delay = 1.5 + Math.random() * 0.5;
+                    item.style.animationName = 'gridFadeOut';
+                    item.style.animationDuration = '0.8s';
+                    item.style.animationDelay = `${delay}s`;
+                    item.style.animationFillMode = 'forwards';
+                });
+                
+                // Fade out the entire preloader
+                setTimeout(() => {
+                    document.querySelector('.preloader').classList.add('fade');
+                }, 3000);
+            }, 1500);
+        });
+
+        // Canvas Background
+        const bgCanvas = document.getElementById('bg-canvas');
+        const bgCtx = bgCanvas.getContext('2d');
+        let time = 0;
+
+        function resizeCanvas() {
+            bgCanvas.width = window.innerWidth;
+            bgCanvas.height = window.innerHeight;
+        }
+
+        function drawWaves() {
+            bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+            
+            const gradient = bgCtx.createLinearGradient(0, 0, 0, bgCanvas.height);
+            
+            // Get scroll position to change colors
+            const scrollPos = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+            
+            // Day to night gradient based on scroll
+            if (scrollPos < 0.2) {
+                // Morning
+                gradient.addColorStop(0, '#e0f7fa');
+                gradient.addColorStop(1, '#b3e5fc');
+            } else if (scrollPos < 0.4) {
+                // Day
+                gradient.addColorStop(0, '#bbdefb');
+                gradient.addColorStop(1, '#90caf9');
+            } else if (scrollPos < 0.6) {
+                // Evening
+                gradient.addColorStop(0, '#dcedc8');
+                gradient.addColorStop(1, '#c8e6c9');
+            } else if (scrollPos < 0.8) {
+                // Sunset
+                gradient.addColorStop(0, '#ffccbc');
+                gradient.addColorStop(1, '#ffab91');
+            } else {
+                // Night
+                gradient.addColorStop(0, '#1a237e');
+                gradient.addColorStop(1, '#0d47a1');
+            }
+            
+            bgCtx.fillStyle = gradient;
+            bgCtx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
+            
+            // Draw waves
+            for (let i = 0; i < 3; i++) {
+                bgCtx.beginPath();
+                
+                const alpha = i === 0 ? 0.3 : i === 1 ? 0.2 : 0.1;
+                const height = i === 0 ? 20 : i === 1 ? 15 : 10;
+                const speed = i === 0 ? 0.002 : i === 1 ? 0.003 : 0.004;
+                
+                const color = scrollPos > 0.6 ? `rgba(255, 255, 255, ${alpha})` : `rgba(0, 0, 150, ${alpha})`;
+                bgCtx.strokeStyle = color;
+                bgCtx.lineWidth = 2;
+                
+                bgCtx.moveTo(0, bgCanvas.height / 2);
+                
+                for (let x = 0; x < bgCanvas.width; x += 10) {
+                    const y = Math.sin(x * 0.01 + time * speed) * height + bgCanvas.height / 2;
+                    bgCtx.lineTo(x, y);
+                }
+                
+                bgCtx.stroke();
+            }
+            
+            time += 0.5;
+            requestAnimationFrame(drawWaves);
+        }
+
+        // Rain effect with light refraction
+        const rainCanvas = document.getElementById('rain-canvas');
+        const rainCtx = rainCanvas.getContext('2d');
+        let raindrops = [];
+        let isRaining = false;
+        
+        function resizeRainCanvas() {
+            rainCanvas.width = window.innerWidth;
+            rainCanvas.height = window.innerHeight;
+        }
+        
+        class Raindrop {
+            constructor() {
+                this.reset();
+            }
+            
+            reset() {
+                this.x = Math.random() * rainCanvas.width;
+                this.y = -20;
+                this.length = Math.random() * 30 + 15;
+                this.speed = Math.random() * 8 + 12;
+                this.opacity = Math.random() * 0.5 + 0.3;
+                this.width = Math.random() * 2 + 1;
+                this.hasSplashed = false;
+                this.splashX = 0;
+                this.splashY = 0;
+                this.splashRadius = 0;
+                this.maxSplashRadius = Math.random() * 8 + 3;
+                this.splashOpacity = 0.7;
+                this.splashParticles = [];
+                this.angle = Math.random() * 0.2 + 0.1; // Slight angle for wind effect
+            }
+            
+            update() {
+                if (!this.hasSplashed) {
+                    this.y += this.speed;
+                    this.x += Math.sin(this.angle) * 2; // Add slight horizontal movement
+                    
+                    if (this.y > rainCanvas.height) {
+                        this.hasSplashed = true;
+                        this.splashX = this.x;
+                        this.splashY = rainCanvas.height;
+                        
+                        // Create splash particles
+                        const numParticles = Math.floor(Math.random() * 5) + 3;
+                        for (let i = 0; i < numParticles; i++) {
+                            this.splashParticles.push({
+                                x: this.splashX,
+                                y: this.splashY,
+                                radius: Math.random() * 2 + 1,
+                                angle: Math.random() * Math.PI * 2,
+                                speed: Math.random() * 3 + 1,
+                                opacity: Math.random() * 0.5 + 0.3
+                            });
+                        }
+                    }
+                } else {
+                    this.splashRadius += 0.8;
+                    this.splashOpacity -= 0.05;
+                    
+                    // Update splash particles
+                    this.splashParticles.forEach(particle => {
+                        particle.x += Math.cos(particle.angle) * particle.speed;
+                        particle.y += Math.sin(particle.angle) * particle.speed - 0.5; // Add slight upward movement
+                        particle.opacity -= 0.03;
+                    });
+                    
+                    if (this.splashRadius > this.maxSplashRadius || this.splashOpacity <= 0) {
+                        this.reset();
+                    }
+                }
+            }
+            
+            draw() {
+                if (!this.hasSplashed) {
+                    // Draw light refraction effect
+                    const gradient = rainCtx.createLinearGradient(
+                        this.x, this.y, 
+                        this.x + Math.sin(this.angle) * this.length,
+                        this.y + this.length
+                    );
+                    gradient.addColorStop(0, `rgba(255, 255, 255, ${this.opacity * 0.3})`);
+                    gradient.addColorStop(0.5, `rgba(200, 230, 255, ${this.opacity})`);
+                    gradient.addColorStop(1, `rgba(255, 255, 255, ${this.opacity * 0.3})`);
+                    
+                    rainCtx.beginPath();
+                    rainCtx.moveTo(this.x, this.y);
+                    rainCtx.lineTo(this.x + Math.sin(this.angle) * this.length, this.y + this.length);
+                    rainCtx.strokeStyle = gradient;
+                    rainCtx.lineWidth = this.width;
+                    rainCtx.stroke();
+                } else {
+                    // Draw ripple effect
+                    rainCtx.beginPath();
+                    rainCtx.arc(this.splashX, this.splashY, this.splashRadius, 0, Math.PI * 2);
+                    rainCtx.strokeStyle = `rgba(255, 255, 255, ${this.splashOpacity})`;
+                    rainCtx.lineWidth = 1;
+                    rainCtx.stroke();
+                    
+                    // Draw splash particles
+                    this.splashParticles.forEach(particle => {
+                        if (particle.opacity > 0) {
+                            rainCtx.beginPath();
+                            rainCtx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+                            rainCtx.fillStyle = `rgba(255, 255, 255, ${particle.opacity})`;
+                            rainCtx.fill();
+                        }
+                    });
+                }
+            }
+        }
+        
+        function createRaindrops() {
+            raindrops = [];
+            for (let i = 0; i < 150; i++) {
+                raindrops.push(new Raindrop());
+            }
+        }
+        
+        function drawRain() {
+            if (!isRaining) return;
+            
+            rainCtx.clearRect(0, 0, rainCanvas.width, rainCanvas.height);
+            
+            // Add a slight blue overlay for night rain effect
+            rainCtx.fillStyle = 'rgba(0, 20, 50, 0.03)';
+            rainCtx.fillRect(0, 0, rainCanvas.width, rainCanvas.height);
+            
+            raindrops.forEach(drop => {
+                drop.update();
+                drop.draw();
+            });
+            
+            requestAnimationFrame(drawRain);
+        }
+        
+        function toggleRain() {
+            isRaining = !isRaining;
+            
+            if (isRaining) {
+                createRaindrops();
+                drawRain();
+            }
+        }
+
+        // Scroll effects
+        function handleScroll() {
+            const scrollTop = window.scrollY;
+            const windowHeight = window.innerHeight;
+            const sections = document.querySelectorAll('section');
+            const backToTop = document.querySelector('.back-to-top');
+            
+            // Show/hide back to top button
+            if (scrollTop > windowHeight / 2) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+            
+            // Animate timeline items
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            timelineItems.forEach(item => {
+                const itemTop = item.getBoundingClientRect().top;
+                
+                if (itemTop < windowHeight * 0.8) {
+                    item.classList.add('visible');
+                }
+            });
+            
+            // Nav highlight
+            const navLinks = document.querySelectorAll('.nav-link');
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                
+                if (scrollTop >= sectionTop - 100) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${currentSection}`) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Toggle rain effect based on section
+            if (currentSection === 'education' || currentSection === 'publications' || currentSection === 'recommendations') {
+                if (!isRaining) toggleRain();
+            } else {
+                if (isRaining) toggleRain();
+            }
+            
+            // Make nav sticky
+            const nav = document.querySelector('nav');
+            if (scrollTop > 0) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        }
+
+        // Interactive cursor
+        function updateCursor(e) {
+            const cursor = document.querySelector('.custom-cursor');
+            if (cursor) {
+                // Add slight lag for smoother effect
+                const lag = 0.15;
+                const targetX = e.clientX;
+                const targetY = e.clientY;
+                
+                const rect = cursor.getBoundingClientRect();
+                let cursorX = rect.left + rect.width / 2;
+                let cursorY = rect.top + rect.height / 2;
+                
+                cursorX = cursorX + (targetX - cursorX) * lag;
+                cursorY = cursorY + (targetY - cursorY) * lag;
+                
+                cursor.style.left = `${cursorX}px`;
+                cursor.style.top = `${cursorY}px`;
+            }
+        }
+
+        function activateCursor() {
+            document.querySelector('.custom-cursor').classList.add('active');
+        }
+
+        function deactivateCursor() {
+            document.querySelector('.custom-cursor').classList.remove('active');
+        }
+        
+        // Set up cursor trail effect
+        function setupCursorTrail() {
+            const numTrails = 5;
+            const trailContainer = document.createElement('div');
+            trailContainer.style.position = 'fixed';
+            trailContainer.style.top = '0';
+            trailContainer.style.left = '0';
+            trailContainer.style.width = '100%';
+            trailContainer.style.height = '100%';
+            trailContainer.style.pointerEvents = 'none';
+            trailContainer.style.zIndex = '9998';
+            document.body.appendChild(trailContainer);
+            
+            let trails = [];
+            
+            for (let i = 0; i < numTrails; i++) {
+                const trail = document.createElement('div');
+                trail.style.position = 'absolute';
+                trail.style.width = '10px';
+                trail.style.height = '10px';
+                trail.style.borderRadius = '50%';
+                trail.style.backgroundColor = 'rgba(52, 152, 219, 0.5)';
+                trail.style.transform = 'translate(-50%, -50%)';
+                trail.style.transition = 'width 0.3s, height 0.3s, opacity 0.3s';
+                trail.style.opacity = 0.5 - (i * 0.1);
+                trail.style.zIndex = numTrails - i;
+                
+                trailContainer.appendChild(trail);
+                trails.push({
+                    element: trail,
+                    x: 0,
+                    y: 0,
+                    delay: i * 4
+                });
+            }
+            
+            let positions = [];
+            
+            document.addEventListener('mousemove', (e) => {
+                positions.push({
+                    x: e.clientX,
+                    y: e.clientY,
+                    timestamp: Date.now()
+                });
+                
+                // Keep only recent positions
+                positions = positions.filter(pos => Date.now() - pos.timestamp < 200);
+            });
+            
+            function updateTrails() {
+                trails.forEach((trail, index) => {
+                    const delayedPos = positions.find(pos => Date.now() - pos.timestamp >= trail.delay);
+                    
+                    if (delayedPos) {
+                        trail.x = delayedPos.x;
+                        trail.y = delayedPos.y;
+                    }
+                    
+                    trail.element.style.left = `${trail.x}px`;
+                    trail.element.style.top = `${trail.y}px`;
+                });
+                
+                requestAnimationFrame(updateTrails);
+            }
+            
+            updateTrails();
+        }
+
+        // Mobile menu toggle
+        function toggleMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('active');
+        }
+
+        // Modal functionality
+        function showModal(content) {
+            const modal = document.getElementById('detailModal');
+            const modalBody = modal.querySelector('.modal-body');
+            
+            modalBody.innerHTML = content;
+            modal.classList.add('active');
+            
+            // Prevent scrolling on body
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('detailModal');
+            modal.classList.remove('active');
+            
+            // Re-enable scrolling
+            document.body.style.overflow = '';
+        }
+
+        // Create decorative elements
+        function createDecorativeElements() {
+            // Create bubbles
+            for (let i = 0; i < 20; i++) {
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                
+                const size = Math.random() * 120 + 60;
+                const section = document.querySelectorAll('section')[Math.floor(Math.random() * document.querySelectorAll('section').length)];
+                
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                bubble.style.left = `${Math.random() * 100}%`;
+                bubble.style.top = `${Math.random() * 100}%`;
+                bubble.style.animationDelay = `${Math.random() * 5}s`;
+                bubble.style.opacity = `${Math.random() * 0.2 + 0.1}`;
+                
+                section.appendChild(bubble);
+            }
+            
+            // Create particles
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                const size = Math.random() * 5 + 2;
+                const section = document.querySelectorAll('section')[Math.floor(Math.random() * document.querySelectorAll('section').length)];
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                section.appendChild(particle);
+            }
+            
+            // Create intro particles
+            const introAnimation = document.createElement('div');
+            introAnimation.classList.add('intro-animation');
+            
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('intro-particle');
+                
+                const size = Math.random() * 8 + 2;
+                const delay = Math.random() * 10;
+                const duration = Math.random() * 10 + 10;
+                const startPosX = Math.random() * window.innerWidth;
+                const startPosY = Math.random() * window.innerHeight + window.innerHeight * 0.5;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${startPosX}px`;
+                particle.style.top = `${startPosY}px`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.animationDuration = `${duration}s`;
+                
+                introAnimation.appendChild(particle);
+            }
+            
+            // Create glow effects
+            for (let i = 0; i < 3; i++) {
+                const glow = document.createElement('div');
+                glow.classList.add('glow-effect');
+                
+                const top = 20 + (i * 30);
+                const left = 20 + (i * 20);
+                const delay = i * 2;
+                
+                glow.style.top = `${top}%`;
+                glow.style.left = `${left}%`;
+                glow.style.animationDelay = `${delay}s`;
+                
+                document.querySelector('header').appendChild(glow);
+            }
+            
+            document.querySelector('header').appendChild(introAnimation);
+        }
+
+        // 3D perspective effect for cards
+        function setup3DEffect() {
+            const cards = document.querySelectorAll('.timeline-item, .skill-category, .publication-card, .project-card, .recommendation-card');
+            
+            cards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const rotateX = (y - centerY) / 10;
+                    const rotateY = (centerX - x) / 10;
+                    
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
+                    card.style.boxShadow = `${rotateY/2}px ${rotateX/2}px 20px rgba(0, 0, 0, 0.2)`;
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = '';
+                    card.style.boxShadow = '';
+                    
+                    // Add a transition on mouse leave for smooth reset
+                    card.style.transition = 'transform 0.5s ease, box-shadow 0.5s ease';
+                    setTimeout(() => {
+                        card.style.transition = '';
+                    }, 500);
+                });
+            });
+        }
+        
+        // Parallax scroll effect
+        function setupParallaxEffect() {
+            const parallaxElements = document.querySelectorAll('.bubble, .particle, .glow-effect');
+            
+            window.addEventListener('scroll', () => {
+                const scrollY = window.scrollY;
+                
+                parallaxElements.forEach(element => {
+                    const speed = element.classList.contains('bubble') ? 0.05 : 
+                                 element.classList.contains('glow-effect') ? 0.08 : 0.03;
+                    
+                    const yPos = -scrollY * speed;
+                    element.style.transform = `translateY(${yPos}px)`;
+                });
+            });
+        }
+
+        // Initialize everything
+        function init() {
+            // Window resize events
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+                resizeRainCanvas();
+            });
+            
+            // Scroll events
+            window.addEventListener('scroll', handleScroll);
+            
+            // Cursor events
+            document.addEventListener('mousemove', updateCursor);
+            document.addEventListener('mousedown', activateCursor);
+            document.addEventListener('mouseup', deactivateCursor);
+            setupCursorTrail();
+            
+            // Menu toggle
+            document.querySelector('.menu-toggle').addEventListener('click', toggleMenu);
+            
+            // Close modal button
+            document.querySelector('.close-modal').addEventListener('click', closeModal);
+            
+            // Initialize canvases
+            resizeCanvas();
+            resizeRainCanvas();
+            drawWaves();
+            
+            // Create decorative elements
+            createDecorativeElements();
+            
+            // Set up 3D effect for cards
+            setup3DEffect();
+            
+            // Set up parallax effect
+            setupParallaxEffect();
+            
+            // Initial scroll handling
+            handleScroll();
+            
+            // Smooth scroll for navigation
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Close mobile menu if open
+                        document.querySelector('.nav-links').classList.remove('active');
+                    }
+                });
+            });
+        }
+
+        // Run initialization
+        init();
+    </script>
+</body>
+</html>
